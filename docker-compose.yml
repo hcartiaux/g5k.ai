@@ -1,0 +1,37 @@
+services:
+  # Ollama service with ROCm support for AMD GPUs
+  ollama:
+    image: ollama/ollama:rocm
+    container_name: ollama
+    devices:
+      - /dev/kfd:/dev/kfd
+      - /dev/dri:/dev/dri
+    volumes:
+      - /tmp/:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - app_net
+    restart: unless-stopped
+
+  # Open WebUI service
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    depends_on:
+      - ollama
+    ports:
+      - "3000:8080"
+    environment:
+      - 'OLLAMA_BASE_URL=http://ollama:11434'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - /tmp/:/app/backend/data
+    networks:
+      - app_net
+    restart: always
+
+networks:
+  app_net:
+    driver: bridge
