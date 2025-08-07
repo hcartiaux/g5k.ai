@@ -7,12 +7,35 @@ services:
       - /dev/kfd:/dev/kfd
       - /dev/dri:/dev/dri
     volumes:
-      - /tmp/:/root/.ollama
+      - /tmp/ollama:/root/.ollama
     ports:
       - "11434:11434"
     networks:
       - app_net
     restart: unless-stopped
+    healthcheck:
+      # https://github.com/ollama/ollama/issues/1378
+      test:  [ "CMD-SHELL", "bash", "-c", "{ printf >&3 'GET / HTTP/1.0\\r\\n\\r\\n'; cat <&3; } 3<>/dev/tcp/localhost/11434 | grep 'Ollama is' || exit 1"  ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  ollama-model-downloader:
+    image: ollama/ollama:rocm
+    container_name: ollama-model-downloader
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - /tmp/ollama:/root/.ollama
+    networks:
+      - app_net
+    environment:
+      - OLLAMA_HOST=ollama:11434
+    command: >
+      pull gpt-oss:20b
+    restart: "no"
 
   # Open WebUI service
   open-webui:
@@ -20,14 +43,17 @@ services:
     container_name: open-webui
     depends_on:
       - ollama
+      - ollama-model-downloader
     ports:
       - "3000:8080"
     environment:
       - 'OLLAMA_BASE_URL=http://ollama:11434'
+      - 'WEBUI_AUTH=False'
+      - 'DEFAULT_MODELS=gpt-oss:20b'
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - /tmp/:/app/backend/data
+      - /tmp/open-webui:/app/backend/data
     networks:
       - app_net
     restart: always
