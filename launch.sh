@@ -8,5 +8,6 @@ g5k-setup-docker -t
 sudo mkdir -p /tmp/ollama /tmp/open-webui
 sudo chown -R 1000:1000 /tmp/ollama /tmp/open-webui
 
-docker compose up
+docker compose up -d
 
+docker compose logs -f
