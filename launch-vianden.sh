@@ -1,0 +1,30 @@
+#!/bin/bash
+#OAR -l nodes=1,walltime=0:30:0
+#OAR -q default
+#OAR -t exotic
+#OAR -t deploy
+#OAR -p vianden
+
+unames=Linux
+unamem=x86_64
+
+SSH="ssh -o StrictHostKeyChecking=no root@vianden-1"
+
+kadeploy3 -m vianden-1 ubuntu2404-rocm
+
+$SSH mkdir -p /tmp/docker
+$SSH mkdir -p /var/lib/docker
+$SSH mount --bind /tmp/docker /var/lib/docker
+curl -sSL https://get.docker.com/ | $SSH sh
+$SSH curl -sSL "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-${unames}-${unamem}" -o /usr/local/bin/docker-compose
+$SSH chmod +x /usr/local/bin/docker-compose
+$SSH mkdir -p /etc/docker
+echo "{ \"registry-mirrors\": [\"http://docker-cache.grid5000.fr\"] }" | $SSH tee /etc/docker/daemon.json
+$SSH systemctl restart docker
+$SSH chmod o+rw /var/run/docker.sock
+
+$SSH mkdir -p /tmp/ollama /tmp/open-webui
+$SSH chown -R 1000:1000 /tmp/ollama /tmp/open-webui
+
+$SSH sudo -u hcartiaux -i 'bash -c "cd ~/ollama/ && docker compose up -d"'
+$SSH sudo -u hcartiaux -i 'bash -c "cd ~/ollama/ && docker compose logs -f"'
