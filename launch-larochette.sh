@@ -1,6 +1,5 @@
 #!/bin/bash
 #OAR -l nodes=1,walltime=1:0:0
-#OAR -q testing
 #OAR -p larochette
 
 g5k-setup-docker -t
