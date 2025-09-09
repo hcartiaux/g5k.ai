@@ -12,6 +12,7 @@ SSH="ssh -o StrictHostKeyChecking=no root@vianden-1"
 
 kadeploy3 -m vianden-1 ubuntu2404-rocm
 
+# Install Docker manually (replicate `g5k-setup-docker -t`)
 $SSH mkdir -p /tmp/docker
 $SSH mkdir -p /var/lib/docker
 $SSH mount --bind /tmp/docker /var/lib/docker
@@ -23,8 +24,10 @@ echo "{ \"registry-mirrors\": [\"http://docker-cache.grid5000.fr\"] }" | $SSH te
 $SSH systemctl restart docker
 $SSH chmod o+rw /var/run/docker.sock
 
+# Create the Ollama and OpenWebUI directories
 $SSH mkdir -p /tmp/ollama /tmp/open-webui
 $SSH chown -R 1000:1000 /tmp/ollama /tmp/open-webui
 
-$SSH sudo -u hcartiaux -i 'bash -c "cd ~/ollama/ && docker compose up -d"'
-$SSH sudo -u hcartiaux -i 'bash -c "cd ~/ollama/ && docker compose logs -f"'
+# Start the docker containers
+$SSH sudo -u $USER -i 'bash -c "cd ~/ollama/ && docker compose up -d"'
+$SSH sudo -u $USER -i 'bash -c "cd ~/ollama/ && docker compose logs -f"'
