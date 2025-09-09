@@ -36,7 +36,7 @@ services:
     environment:
       - OLLAMA_HOST=ollama:11434
     command: >
-      pull gpt-oss:20b
+      pull mistral:7b
     restart: "no"
 
   # Open WebUI service
