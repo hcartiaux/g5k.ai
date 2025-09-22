@@ -30,5 +30,5 @@ $SSH mkdir -p /tmp/ollama /tmp/open-webui
 $SSH chown -R 1000:1000 /tmp/ollama /tmp/open-webui
 
 # Start the docker containers
-$SSH sudo -u $USER -i 'bash -c "cd $WORKING_DIR && docker compose up -d"'
-$SSH sudo -u $USER -i 'bash -c "cd $WORKING_DIR && docker compose logs -f"'
+$SSH sudo -u $USER -i "bash -c 'cd $WORKING_DIR && docker compose up -d'"
+$SSH sudo -u $USER -i "bash -c 'cd $WORKING_DIR && docker compose logs -f'"
