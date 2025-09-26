@@ -1,5 +1,5 @@
 #!/bin/bash
-#OAR -l nodes=1,walltime=0:30:0
+#OAR -l nodes=1,walltime=1:30:0
 #OAR -q default
 #OAR -t exotic
 #OAR -t deploy

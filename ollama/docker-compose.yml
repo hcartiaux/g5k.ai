@@ -10,7 +10,8 @@ services:
       - /tmp/ollama:/root/.ollama
     ports:
       - "11434:11434"
-    # environment:
+    environment:
+        - "OLLAMA_CONTEXT_LENGTH=131072"
     #   - "OLLAMA_SCHED_SPREAD=1"
     networks:
       - app_net
