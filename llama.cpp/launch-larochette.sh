@@ -1,7 +1,10 @@
 #!/bin/bash
-#OAR -l nodes=1,walltime=6:00:0
-#OAR -p larochette
+#OAR -l nodes=1,walltime=1:00:0
 #OAR -t deploy
+#OAR -p larochette
+## Select vianden-1 (MI300X) instead of larochette (MI210)
+##OAR -p vianden
+##OAR -t exotic
 
 # Configuration
 WORKING_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
