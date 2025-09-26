@@ -12,10 +12,9 @@ cd llama.cpp
 export HIPCXX="$(hipconfig -l)/clang"
 export HIP_PATH="$(hipconfig -R)"
 
-# For larochette
-cmake -S . -B build -DGGML_HIP=ON -DAMDGPU_TARGETS=gfx90a -DCMAKE_BUILD_TYPE=Release
-# For vianden
-# cmake -S . -B build -DGGML_HIP=ON -DAMDGPU_TARGETS=gfx942 -DCMAKE_BUILD_TYPE=Release
+gfxvers=$(rocm-smi --showproductname | awk '/.*GFX Version.*/ {print $5}' | head -n1)
+
+cmake -S . -B build -DGGML_HIP=ON -DAMDGPU_TARGETS=${gfxvers} -DCMAKE_BUILD_TYPE=Release
 
 cmake --build build --config Release -- -j $(nproc)
 
