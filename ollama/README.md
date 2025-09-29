@@ -16,7 +16,7 @@ Handle with care!**
 
    ```bash
    (fluxembourg) $ git clone https://github.com/hcartiaux/g5k.ai
-   (fluxembourg) $ cd g5k.ai
+   (fluxembourg) $ cd g5k.ai/ollama
    ```
 
 3. Submit the job, either on `larochette` (4x MI210)
