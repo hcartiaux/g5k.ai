@@ -64,14 +64,14 @@ Note that this launcher script will download `Gpt-Oss-120b` from the Luxembourg 
   * `llama.cpp` is built inside `/tmp/llama.cpp/build/bin/`.
 
   * Download new models from HuggingFace using the parameter `-hf`
-```bash
-cd /tmp/llama.cpp/build/bin
-./llama-server -hf unsloth/gpt-oss-20b-GGUF --host 0.0.0.0 --port 11434 --ctx-size 131072 --jinja
-```
+  ```bash
+  cd /tmp/llama.cpp/build/bin
+  ./llama-server -hf unsloth/gpt-oss-20b-GGUF --host 0.0.0.0 --port 11434 --ctx-size 131072 --jinja
+  ```
 
   * Select your GPU devices with the environment variable `CUDA_VISIBLE_DEVICES`
-```bash
-export CUDA_VISIBLE_DEVICES=0   # Use the 1st GPU only
-export CUDA_VISIBLE_DEVICES=0,1 # Use the 1st and 2nd GPU
-export CUDA_VISIBLE_DEVICES=2,3 # Use the 3rd and 4th GPU
-```
+  ```bash
+  export CUDA_VISIBLE_DEVICES=0   # Use the 1st GPU only
+  export CUDA_VISIBLE_DEVICES=0,1 # Use the 1st and 2nd GPU
+  export CUDA_VISIBLE_DEVICES=2,3 # Use the 3rd and 4th GPU
+  ```
