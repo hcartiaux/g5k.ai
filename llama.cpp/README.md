@@ -1,4 +1,4 @@
-# `llama.cpp`` launcher script for Grid'5000
+# `llama.cpp` launcher script for Grid'5000
 
 This is a generic launcher script for `llama.cpp` for Luxembourg compute nodes with AMD GPUs.
 Feel free to modify it and create pull requests.
