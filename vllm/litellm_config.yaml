@@ -1,0 +1,26 @@
+model_list:
+  # The Reasoning Brain (GPUs 0 & 1)
+  - model_name: gpt-oss-120b
+    litellm_params:
+      model: hosted_vllm/openai/gpt-oss-120b
+      api_base: http://vllm-120b-a:8000/v1
+      api_key: "dummy"
+
+  # The Worker Swarm (Load balanced across GPU 2 and 3)
+  - model_name: gpt-oss-20b
+    litellm_params:
+      model: hosted_vllm/openai/gpt-oss-20b
+      api_base: http://vllm-20b-b:8000/v1
+      api_key: "dummy"
+  - model_name: gpt-oss-20b
+    litellm_params:
+      model: hosted_vllm/openai/gpt-oss-20b
+      api_base: http://vllm-20b-c:8000/v1
+      api_key: "dummy"
+
+router_settings:
+  routing_strategy: least-busy
+  enable_pre_call_checks: true
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY

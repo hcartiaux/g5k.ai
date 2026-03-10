@@ -1,0 +1,79 @@
+services:
+  # Model: GPT-OSS-120B (GPU 0 & 1)
+  vllm-120b-a:
+    image: vllm/vllm-openai-rocm:latest
+    privileged: true
+    ipc: host
+    shm_size: '32gb' # Required for Tensor Parallelism (NCCL/RCCL)
+    networks:
+      - llm-internal
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    environment:
+      - HIP_VISIBLE_DEVICES=0,1
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    command: [
+      "openai/gpt-oss-120b",
+      "--tensor-parallel-size", "2",
+      "--gpu-memory-utilization", "0.92",
+      "--max-model-len", "131072"
+    ]
+
+  # Model: GPT-OSS-20B (GPU 2)
+  vllm-20b-b:
+    image: vllm/vllm-openai-rocm:latest
+    privileged: true
+    networks:
+      - llm-internal
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    environment:
+      - HIP_VISIBLE_DEVICES=2
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    command: [
+      "openai/gpt-oss-20b",
+      "--gpu-memory-utilization", "0.8",
+    ]
+
+  # Model: GPT-OSS-20B (GPU 3)
+  vllm-20b-c:
+    image: vllm/vllm-openai-rocm:latest
+    privileged: true
+    networks:
+      - llm-internal
+    devices:
+      - "/dev/kfd:/dev/kfd"
+      - "/dev/dri:/dev/dri"
+    environment:
+      - HIP_VISIBLE_DEVICES=3
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    command: [
+      "openai/gpt-oss-20b",
+      "--gpu-memory-utilization", "0.8",
+    ]
+
+  # The Router (Entry point for all Agents)
+  litellm:
+    environment:
+      - LITELLM_MASTER_KEY
+    image: ghcr.io/berriai/litellm:main-latest
+    networks:
+      - llm-internal
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./litellm_config.yaml:/app/config.yaml
+    depends_on:
+      - vllm-120b-a
+      - vllm-20b-b
+      - vllm-20b-c
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+
+networks:
+  llm-internal:
+    driver: bridge
