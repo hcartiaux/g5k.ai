@@ -4,7 +4,7 @@ This is a generic launcher script for VLLM and LiteLLM for Luxembourg compute
 nodes with AMD MI210 GPUs. Feel free to modify it, propose improvement.
 
 The objective is to exploit the 4x AMD MI210 GPUs of a `larochette` compute node
-by spawning a pool of VLLM workers:
+by spawning a pool of VLLM workers behing a LiteLLM router:
 
 * 1st worker uses GPUs 0 & 1 for `gpt-oss-120b`
 * 2nd worker uses GPU 2 for `gpt-oss-20b`
@@ -103,10 +103,10 @@ LiteLLM is not configured with HTTPS. Handle with care!**
    ```
    (local) $ curl http://localhost:4000/v1/chat/completions               \
                   -H "Content-Type: application/json"                     \
-                  -H "Authorization: Bearer sk-your-random-secret" \
+                  -H "Authorization: Bearer sk-your-random-secret"        \
                   -d '{
     "model": "gpt-oss-120b",
     "messages": [{"role": "user", "content": "What is the capital of Luxembourg"}]
-  }'
+  }\'
   {"id":"chatcmpl-909394945dbf0807","created":1773158004,"model":"gpt-oss-120b","object":"chat.completion","choices":[{"finish_reason":"stop","index":0,"message":{"content":"The capital of Luxembourg is **Luxembourg City**.","role":"assistant","reasoning_content":"The user asks: \"What is the capital of Luxembourg\". Simple factual answer: Luxembourg City. Provide answer.","provider_specific_fields":{"refusal":null,"reasoning":"The user asks: \"What is the capital of Luxembourg\". Simple factual answer: Luxembourg City. Provide answer.","reasoning_content":"The user asks: \"What is the capital of Luxembourg\". Simple factual answer: Luxembourg City. Provide answer."}},"provider_specific_fields":{"token_ids":null,"stop_reason":null}}],"usage":{"completion_tokens":44,"prompt_tokens":73,"total_tokens":117}}
    ```
