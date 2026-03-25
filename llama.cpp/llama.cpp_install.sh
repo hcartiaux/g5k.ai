@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Dependencies
+apt update
 apt install -y cmake libcurl4-openssl-dev hipcc
 
 # Download the model
