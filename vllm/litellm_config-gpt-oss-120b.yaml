@@ -1,0 +1,18 @@
+model_list:
+  - model_name: gpt-oss-120b
+    litellm_params:
+      model: hosted_vllm/openai/gpt-oss-120b
+      api_base: http://vllm-120b-a:8000/v1
+      api_key: "dummy"
+  - model_name: gpt-oss-120b
+    litellm_params:
+      model: hosted_vllm/openai/gpt-oss-120b
+      api_base: http://vllm-120b-b:8000/v1
+      api_key: "dummy"
+
+router_settings:
+  routing_strategy: least-busy
+  enable_pre_call_checks: true
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
