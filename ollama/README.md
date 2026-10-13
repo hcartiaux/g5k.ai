@@ -1,7 +1,7 @@
 # Ollama and OpenWebUI launcher scripts for Grid'5000
 
 This is a generic launcher script for Ollama and OpenWebUI for Luxembourg compute nodes with AMD GPUs.
-Feel free to modify it, propose improvement.
+Feel free to modify it and propose improvement.
 
 **/!\ Note that it does not implement any security features or authentication.
 Handle with care!**
@@ -22,14 +22,14 @@ Handle with care!**
 3. Submit the job, either on `larochette` (4x MI210)
 
    ```
-   (fluxembourg) $ oarsub -S ./launch-larochette.sh
+   (fluxembourg) $ oarsub -p larochette -S ./launch-ollama.sh
    OAR_JOB_ID=260397
    ```
 
-   Or `vianden` (8x MI310x)
+   Or `vianden` (8x MI300x)
 
    ```
-   (fluxembourg) $ oarsub -S ./launch-vianden.sh
+   (fluxembourg) $ oarsub -t exotic -p vianden -S ./launch-ollama.sh
    OAR_JOB_ID=260398
    ```
 
