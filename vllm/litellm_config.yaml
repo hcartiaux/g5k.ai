@@ -1,12 +1,12 @@
 model_list:
-  # The Reasoning Brain (GPUs 0 & 1)
+  # gpt-oss:120b, one instance balanced on GPUs 0 and 1
   - model_name: gpt-oss-120b
     litellm_params:
       model: hosted_vllm/openai/gpt-oss-120b
       api_base: http://vllm-120b-a:8000/v1
       api_key: "dummy"
 
-  # The Worker Swarm (Load balanced across GPU 2 and 3)
+  # gpt-oss:20b, 2 instances on GPU 2 and 3
   - model_name: gpt-oss-20b
     litellm_params:
       model: hosted_vllm/openai/gpt-oss-20b
