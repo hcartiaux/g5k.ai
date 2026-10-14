@@ -1,22 +1,20 @@
 #!/bin/bash
 
-# Dependencies
-apt update
-apt install -y cmake libcurl4-openssl-dev hipcc
-
-# Download the model
 cd /tmp
-
-# Build llama.cpp
-git clone https://github.com/ggml-org/llama.cpp
+[ -d llama.cpp ] || git clone https://github.com/ggml-org/llama.cpp
 cd llama.cpp
-export HIPCXX="$(hipconfig -l)/clang"
-export HIP_PATH="$(hipconfig -R)"
+rm -rf build
 
-gfxvers=$(rocm-smi --showproductname | awk '/.*GFX Version.*/ {print $5}' | head -n1)
+gfxvers=$(rocminfo | grep -o -m1 -E 'gfx[0-9a-f]+' | head -n1)
+echo "GPU target: $gfxvers"
 
-cmake -S . -B build -DGGML_HIP=ON -DAMDGPU_TARGETS=${gfxvers} -DCMAKE_BUILD_TYPE=Release
+RUNTIME_DIR="$(echo "${CMAKE_PREFIX_PATH}" | tr ':' '\n' \
+             | grep 'rocm-hip-runtime' | sort | head -n1)"
+
+cmake -S . -B build                \
+    -DGGML_HIP=ON                  \
+    -DAMDGPU_TARGETS=${gfxvers}    \
+    -DCMAKE_BUILD_TYPE=Release     \
+    -DCMAKE_HIP_COMPILER_ROCM_ROOT="$RUNTIME_DIR"
 
 cmake --build build --config Release -- -j $(nproc)
-
-ln -sf /tmp/ /root/.cache

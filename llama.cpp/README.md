@@ -24,29 +24,28 @@ Note that this launcher script will download `Gpt-Oss-120b` from the Luxembourg 
 3. Submit the job on `larochette` (4x MI210)
 
    ```
-   (fluxembourg) $ oarsub -S ./launch-larochette.sh
+   (fluxembourg) $ oarsub -S ./launch-llama_cpp.sh
    OAR_JOB_ID=265401
    ```
 
    To submit the job on vianden, adapt the `#OAR` headers accordingly.
 
-4. Look at the output and wait for the first model to be downloaded and `llama.cpp`` to be started.
+4. Look at the output and wait for the first model to be downloaded and `llama.cpp`` to be started (<10 minutes).
    ```
    (fluxembourg) $ multitail -i OAR.<OAR_JOB_iD>.*
-   {# Copyright 2025-present Unsloth. Apache 2.0 License. Unsloth chat template fixes. Edited from ggml-org & OpenAI #}, example_format: '<|start|>system<|mess
-   age|>You are ChatGPT, a large language model trained by OpenAI.
-   Knowledge cutoff: 2024-06
-   Current date: 2025-09-29
-
-   Reasoning: medium
-
-   # Valid channels: analysis, commentary, final. Channel must be included for every message.<|end|><|start|>developer<|message|># Instructions
-
-   You are a helpful assistant<|end|><|start|>user<|message|>Hello<|end|><|start|>assistant<|channel|>final<|message|>Hi there<|end|><|start|>user<|message|>Ho
-   w are you?<|end|><|start|>assistant'
-   main: server is listening on http://0.0.0.0:11434 - starting the main loop
-   srv  update_slots: all slots are idle
-   ```
+    0.00.002.376 I srv  llama_server: initializing ...
+    0.00.080.896 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+    0.00.096.195 I srv    load_model: loading model '/tmp/unsloth_gpt-oss-120b-GGUF_gpt-oss-120b-F16.gguf'
+    0.01.268.292 W load: setting token '<|message|>' (200008) attribute to USER_DEFINED (16), old attributes: 8
+    0.01.268.295 W load: setting token '<|start|>' (200006) attribute to USER_DEFINED (16), old attributes: 8
+    0.01.268.296 W load: setting token '<|constrain|>' (200003) attribute to USER_DEFINED (16), old attributes: 8
+    0.01.269.058 W load: setting token '<|channel|>' (200005) attribute to USER_DEFINED (16), old attributes: 8
+    0.01.273.730 W load: special_eog_ids contains both '<|return|>' and '<|call|>', or '<|calls|>' and '<|flush|>' tokens, removing '<|end|>' token from EOG list
+    6.55.337.849 I cmn          init: llama threadpool init, n_threads = 96
+    6.55.578.156 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 131072, kv_unified = 'true'
+    6.55.580.886 I srv  llama_server: model loaded
+    6.55.580.891 I srv  llama_server: listening on http://0.0.0.0:11434
+    ```
 
 5. Determine which compute node is used, and open a tunnel from your machine to use the Open-AI compatible API.
 
