@@ -6,7 +6,7 @@ Feel free to modify it and create pull requests.
 **/!\ Note that it does not implement any security features or authentication.
 Handle with care!**
 
-Note that this launcher script will download `Gpt-Oss-120b` from the Luxembourg storage server (`srv-data2.luxembourg`).
+Note that this launcher script will download `Qwen 3.8 27B Q4` from the Luxembourg storage server (`srv-data2.luxembourg`).
 
 1. Connect to the Luxembourg Grid'5000 site
 
@@ -21,7 +21,7 @@ Note that this launcher script will download `Gpt-Oss-120b` from the Luxembourg 
    (fluxembourg) $ cd g5k.ai/llama.cpp
    ```
 
-3. Submit the job on `larochette` (4x MI210)
+3. Submit the job on `larochette`, this will request only 1x MI210 GPU.
 
    ```
    (fluxembourg) $ oarsub -S ./launch-llama_cpp.sh
@@ -30,21 +30,24 @@ Note that this launcher script will download `Gpt-Oss-120b` from the Luxembourg 
 
    To submit the job on vianden, adapt the `#OAR` headers accordingly.
 
+  ```
+  #OAR -t exotic
+  #OAR -p vianden
+  ```
+
 4. Look at the output and wait for the first model to be downloaded and `llama.cpp`` to be started (<10 minutes).
    ```
    (fluxembourg) $ multitail -i OAR.<OAR_JOB_iD>.*
-    0.00.002.376 I srv  llama_server: initializing ...
-    0.00.080.896 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
-    0.00.096.195 I srv    load_model: loading model '/tmp/unsloth_gpt-oss-120b-GGUF_gpt-oss-120b-F16.gguf'
-    0.01.268.292 W load: setting token '<|message|>' (200008) attribute to USER_DEFINED (16), old attributes: 8
-    0.01.268.295 W load: setting token '<|start|>' (200006) attribute to USER_DEFINED (16), old attributes: 8
-    0.01.268.296 W load: setting token '<|constrain|>' (200003) attribute to USER_DEFINED (16), old attributes: 8
-    0.01.269.058 W load: setting token '<|channel|>' (200005) attribute to USER_DEFINED (16), old attributes: 8
-    0.01.273.730 W load: special_eog_ids contains both '<|return|>' and '<|call|>', or '<|calls|>' and '<|flush|>' tokens, removing '<|end|>' token from EOG list
-    6.55.337.849 I cmn          init: llama threadpool init, n_threads = 96
-    6.55.578.156 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 131072, kv_unified = 'true'
-    6.55.580.886 I srv  llama_server: model loaded
-    6.55.580.891 I srv  llama_server: listening on http://0.0.0.0:11434
+    0.00.001.789 I srv  llama_server: initializing ...
+    0.00.043.948 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+    0.00.044.289 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+    0.00.057.118 I srv    load_model: loading model '/tmp/unsloth_Qwen3.8-27B-UD-Q4_K_M.gguf'
+    0.03.530.030 I cmn          init: llama threadpool init, n_threads = 8
+    0.03.637.883 I common_speculative_init_result: creating MTP draft context against the target model '/tmp/unsloth_Qwen3.8-27B-UD-Q4_K_M.gguf'
+    0.03.797.526 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 131072, kv_unified = 'true'
+    0.03.983.371 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)
+    0.03.983.413 I srv  llama_server: model loaded
+    0.03.983.417 I srv  llama_server: listening on http://0.0.0.0:11434
     ```
 
 5. Determine which compute node is used, and open a tunnel from your machine to use the Open-AI compatible API.
